@@ -67,6 +67,7 @@ class Router
 
     public function dispatchNotAllowed()
     {
+        // ??=  says that the left-hand side should be set equal to the right-hand side if the left-hand side is null or undefined.
         $this->errorHandlers[400] ??= fn() => 'not allowed';
         return $this->errorHandlers[400]();
     }

@@ -1,2 +1,3 @@
 .idea
 vendor
+/public/test.php

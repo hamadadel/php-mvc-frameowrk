@@ -11,11 +11,22 @@ class Router
     protected array $routes = [];
     protected array $errorHandlers = [];
 
+    /**
+     * we should be able to access details about the current route. Some of those
+      details may be the named route parameters that were matched along with the route
+     * @var Route
+     */
+    protected Route $current;
+
     public function add(string $method, string $path, callable|string $handler): Route
     {
         return $this->routes[] = new Route($method, $path, $handler);
     }
 
+    public function current(): ?Route
+    {
+        return $this->current;
+    }
     public function dispatch()
     {
         $paths = $this->paths();
@@ -24,6 +35,8 @@ class Router
 
         $matching = $this->match($method, $uri);
         if ($matching) {
+            $this->current = $matching;
+
             try {
                 return $matching->dispatch();
             }
@@ -38,7 +51,7 @@ class Router
         return $this->dispatchNotFound();
     }
 
-    private function paths(): array
+    public function paths(): array
     {
         $paths = [];
         foreach ($this->routes as $route) {
